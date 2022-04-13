@@ -37,3 +37,11 @@ func (db *ClassTable) MustFind(year int, mod string) Class {
 	}
 	panic("not found")
 }
+func (db *ClassTable) MustFindById(id int) Class {
+	for _, c := range db.Data {
+		if c.ID == id {
+			return c
+		}
+	}
+	panic("not found")
+}

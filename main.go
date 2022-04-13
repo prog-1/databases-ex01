@@ -3,6 +3,7 @@ package main
 import (
 	"databases-ex01/database"
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -80,9 +81,27 @@ func main() {
 			fmt.Println("   - ", l.Name)
 		}
 	}
-
+	fmt.Println(studentCountPerClass(db))
+	fmt.Println(studentCountPerYear(db))
+	fmt.Println(lessonsPerYear(db, 10))
 }
+func studentCountPerClass(db tables) map[string]int {
+	m := make(map[string]int)
+	for _, v := range db.groups.Data {
+		class := db.classes.MustFindById(v.ClassID)
+		m[strconv.Itoa(class.Year)+class.Mod]++
+	}
 
+	return m
+}
+func studentCountPerYear(db tables) map[int]int {
+	m := make(map[int]int)
+	for _, v := range db.groups.Data {
+		class := db.classes.MustFindById(v.ClassID)
+		m[class.Year]++
+	}
+	return m
+}
 func studentDayTimetable(db tables, name string, day time.Weekday) (res []database.Lesson) {
 	for _, s := range db.students.Data {
 		if s.Name != name {
@@ -143,4 +162,15 @@ func studentWeekTimetable(db tables, name string) map[time.Weekday][]database.Le
 		}
 	}
 	return res
+}
+func lessonsPerYear(db tables, year int) (s []string) {
+	for _, v := range db.timetable.Data {
+		class := db.classes.MustFindById(v.ClassID)
+		if class.Year == year {
+			lesson := db.lessons.FindById(v.LessonID)
+			s = append(s, lesson.Name)
+		}
+
+	}
+	return s
 }
