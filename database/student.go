@@ -20,3 +20,11 @@ func (db *StudentTable) Insert(name string) Student {
 	db.Data = append(db.Data, s)
 	return s
 }
+func (db *StudentTable) FindStudentById(id int) Student {
+	for _, c := range db.Data {
+		if c.ID == id {
+			return c
+		}
+	}
+	panic("not found")
+}
