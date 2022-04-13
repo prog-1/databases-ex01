@@ -14,6 +14,32 @@ type tables struct {
 	timetable database.TimetableTable
 }
 
+func studentCountPerClass(db tables) map[string]int {
+	//it counts classes too . . .
+	m := make(map[string]int)
+	for _, i := range db.groups.Data {
+		for _, j := range db.classes.Data {
+			class := db.classes.MustFind(j.Year, j.Mod)
+			if i.ClassID == j.ID {
+				m[fmt.Sprint(class)]++
+			}
+		}
+	}
+	return m
+}
+
+func studentCountPerYear(db tables) map[int]int {
+	m := make(map[int]int)
+	for _, i := range db.groups.Data {
+		for _, j := range db.classes.Data {
+			if i.ClassID == j.ID {
+				m[j.Year]++
+			}
+		}
+	}
+	return m
+}
+
 func main() {
 	var db tables
 
@@ -21,6 +47,12 @@ func main() {
 		db.classes.Insert(10, "B"),
 		db.students.Insert("Jaroslavs"),
 		db.students.Insert("Pavels"),
+	)
+
+	db.groups.AddStudentsToClass(
+		db.classes.Insert(11, "a"),
+		db.students.Insert("Abv"),
+		db.students.Insert("Gd"),
 	)
 
 	db.groups.AddStudentsToClass(
@@ -52,6 +84,9 @@ func main() {
 		time.Tuesday,
 		maths,
 	)
+
+	fmt.Println("Student count per class", studentCountPerClass(db))
+	fmt.Println("Student count per year", studentCountPerYear(db))
 
 	fmt.Println("We have", len(db.students.Data), "unique students in our school")
 	fmt.Println("We have", len(db.classes.Data), "unique classes in our school")
