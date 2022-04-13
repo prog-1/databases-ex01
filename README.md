@@ -62,6 +62,6 @@ A [relational database](https://en.wikipedia.org/wiki/Relational_database) is a 
 
 4. Create a new table `Exams` in the database with the following columns: `ID` of type `int`, `StudentID` of type `int`, `LessonID` of type `int`, `Grade` of type `int`.
 
-   1. Write a function `func examsPerClass(year int, mod string) []string` that returns a list of exams for a given class and modifier.
+   1. Write a function `func examsPerClass(db tables, year int, mod string) []string` that returns a list of exams for a given class and modifier.
 
-   2. Write a function `func averageGradeForStudents(name string) float64` that returns an average grade for a given student.
+   2. Write a function `func averageGradeForStudents(db tables, name string) float64` that returns an average grade for a given student.
