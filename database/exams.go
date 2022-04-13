@@ -21,3 +21,9 @@ func (db *ExamsTable) Insert(sID, lID, g int) Exams {
 	db.Data = append(db.Data, e)
 	return e
 }
+
+func (db *ExamsTable) AddExam(sID int, lID int, grade ...int) {
+	for _, le := range grade {
+		db.Insert(sID, lID, le)
+	}
+}
