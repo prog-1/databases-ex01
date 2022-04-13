@@ -311,9 +311,8 @@ func examsPerClass(db tables, year int, mod string) []string {
 }
 
 func averageGradeForStudents(db tables, name string) float64 {
-	var result float64
+	var result, lessoncount float64
 	var id int
-	var lessoncount float64
 	for _, i := range db.students.Data {
 		if i.Name == name {
 			id = i.ID
