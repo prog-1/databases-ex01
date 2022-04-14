@@ -60,6 +60,9 @@ func main() {
 	studentid, lessonid = FindStudentAndLessonID(db, "Alina", "Programming")
 	db.exams.Insert(studentid, lessonid, 8)
 
+	studentid, lessonid = FindStudentAndLessonID(db, "Vladimirs", "English") // to test 'panic()'
+	db.exams.Insert(studentid, lessonid, 10)
+
 	fmt.Println("We have", len(db.students.Data), "unique students in our school")
 	fmt.Println("We have", len(db.classes.Data), "unique classes in our school")
 
@@ -243,29 +246,21 @@ func lessonsPerYear(db tables, year int) []string {
 
 func FindStudentAndLessonID(db tables, studentname string, lessonname string) (int, int) { // to make it easier to enter data
 	var studentid, lessonid int
-	for {
-		for _, i := range db.students.Data {
-			if i.Name == studentname {
-				studentid = i.ID
-			}
-		}
-		if studentid == 0 {
-			panic("not found")
-		} else {
-			break
+	for _, i := range db.students.Data {
+		if i.Name == studentname {
+			studentid = i.ID
 		}
 	}
-	for {
-		for _, e := range db.lessons.Data {
-			if e.Name == lessonname {
-				lessonid = e.ID
-			}
+	if studentid == 0 {
+		panic("studentid is not found in the database")
+	}
+	for _, e := range db.lessons.Data {
+		if e.Name == lessonname {
+			lessonid = e.ID
 		}
-		if lessonid == 0 {
-			panic("not found")
-		} else {
-			break
-		}
+	}
+	if lessonid == 0 {
+		panic("lessonid is not found in the database")
 	}
 	return studentid, lessonid
 }
