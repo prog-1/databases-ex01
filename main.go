@@ -250,8 +250,7 @@ func FindStudentAndLessonID(db tables, studentname string, lessonname string) (i
 			}
 		}
 		if studentid == 0 {
-			db.students.Insert(studentname)
-			continue
+			panic("not found")
 		} else {
 			break
 		}
@@ -263,8 +262,7 @@ func FindStudentAndLessonID(db tables, studentname string, lessonname string) (i
 			}
 		}
 		if lessonid == 0 {
-			db.lessons.Insert(lessonname)
-			continue
+			panic("not found")
 		} else {
 			break
 		}
