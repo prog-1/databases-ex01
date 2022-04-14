@@ -252,7 +252,7 @@ func FindStudentAndLessonID(db tables, studentname string, lessonname string) (i
 		}
 	}
 	if studentid == 0 {
-		panic("studentid is not found in the database")
+		panic("StudentID is not found in the database")
 	}
 	for _, e := range db.lessons.Data {
 		if e.Name == lessonname {
@@ -260,7 +260,7 @@ func FindStudentAndLessonID(db tables, studentname string, lessonname string) (i
 		}
 	}
 	if lessonid == 0 {
-		panic("lessonid is not found in the database")
+		panic("LessonID is not found in the database")
 	}
 	return studentid, lessonid
 }
