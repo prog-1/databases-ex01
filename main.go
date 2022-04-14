@@ -60,8 +60,8 @@ func main() {
 	studentid, lessonid = FindStudentAndLessonID(db, "Alina", "Programming")
 	db.exams.Insert(studentid, lessonid, 8)
 
-	studentid, lessonid = FindStudentAndLessonID(db, "Vladimirs", "English") // to test 'panic()'
-	db.exams.Insert(studentid, lessonid, 10)
+	// studentid, lessonid = FindStudentAndLessonID(db, "Vladimirs", "English") // to test 'panic()'
+	// db.exams.Insert(studentid, lessonid, 10)
 
 	fmt.Println("We have", len(db.students.Data), "unique students in our school")
 	fmt.Println("We have", len(db.classes.Data), "unique classes in our school")
