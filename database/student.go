@@ -11,6 +11,15 @@ type StudentTable struct {
 	Data []Student
 }
 
+func (db *StudentTable) FindStudentById(id int) Student {
+	for _, c := range db.Data {
+		if c.ID == id {
+			return c
+		}
+	}
+	panic("not found")
+}
+
 // Insert adds a new row to the student database.
 func (db *StudentTable) Insert(name string) Student {
 	s := Student{

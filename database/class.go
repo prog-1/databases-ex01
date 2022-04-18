@@ -29,6 +29,14 @@ func (db *ClassTable) Insert(year int, mod string) Class {
 // MustFind returns a class by a given year and a modifier from the class
 // database.
 // The class must be present in the database. Otherwise, the program panics.
+func (db *ClassTable) MustFindById(id int) Class {
+	for _, c := range db.Data {
+		if c.ID == id {
+			return c
+		}
+	}
+	panic("not found")
+}
 func (db *ClassTable) MustFind(year int, mod string) Class {
 	for _, c := range db.Data {
 		if c.Year == year && c.Mod == mod {
