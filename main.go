@@ -3,6 +3,7 @@ package main
 import (
 	"databases-ex01/database"
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -12,9 +13,11 @@ type tables struct {
 	groups    database.GroupTable
 	lessons   database.LessonTable
 	timetable database.TimetableTable
+	exams     database.ExamsTable
 }
 
 func main() {
+
 	var db tables
 
 	db.groups.AddStudentsToClass(
@@ -80,7 +83,66 @@ func main() {
 			fmt.Println("   - ", l.Name)
 		}
 	}
+	fmt.Println(studentCountPerClass(db))
+	fmt.Println(studentCountPerYear(db))
+	fmt.Println(lessonsPerYear(db, 10))
+	fmt.Println(examsPerClass(db, 10, "b"))
+	fmt.Println(averageGradeForStudents(db, "Andrejs"))
 
+}
+
+func studentCountPerClass(db tables) map[string]int {
+	m := make(map[string]int)
+	for _, v := range db.groups.Data {
+		class := db.classes.MustFindById(v.ClassID)
+		m[strconv.Itoa(class.Year)+class.Mod]++
+	}
+	return m
+}
+func studentCountPerYear(db tables) map[int]int {
+	m := make(map[int]int)
+	for _, v := range db.groups.Data {
+		class := db.classes.MustFindById(v.ClassID)
+		m[class.Year]++
+	}
+	return m
+}
+func lessonsPerYear(db tables, year int) []string {
+	var m []string
+	for _, v := range db.timetable.Data {
+		class := db.classes.MustFindById(v.ClassID)
+		if class.Year == year {
+			lesson := db.lessons.FindById(v.LessonID)
+			m = append(m, lesson.Name)
+		}
+	}
+	return m
+}
+func examsPerClass(db tables, year int, mod string) []string {
+	var m []string
+	for _, h := range db.exams.Data {
+		for _, v := range db.timetable.Data {
+			if h.LessonID == v.LessonID {
+				class := db.classes.MustFindById(v.ClassID)
+				if class.Year == year && class.Mod == mod {
+					lesson := db.lessons.FindById(v.LessonID)
+					m = append(m, lesson.Name)
+				}
+			}
+		}
+	}
+	return m
+}
+func averageGradeForStudents(db tables, name string) float64 {
+	var cnt, sum int
+	for _, v := range db.exams.Data {
+		v1 := db.students.FindStudentById(v.StudentID)
+		if v1.Name == name {
+			sum += v.Grade
+		}
+
+	}
+	return float64(sum) / float64(cnt)
 }
 
 func studentDayTimetable(db tables, name string, day time.Weekday) (res []database.Lesson) {

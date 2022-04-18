@@ -11,6 +11,15 @@ type LessonTable struct {
 	Data []Lesson
 }
 
+func (db *LessonTable) FindById(id int) Lesson {
+	for _, c := range db.Data {
+		if c.ID == id {
+			return c
+		}
+	}
+	panic("not found")
+}
+
 // Insert adds a new row to the lesson database.
 func (db *LessonTable) Insert(name string) Lesson {
 	l := Lesson{
