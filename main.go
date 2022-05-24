@@ -12,6 +12,7 @@ type tables struct {
 	groups    database.GroupTable
 	lessons   database.LessonTable
 	timetable database.TimetableTable
+	exams     database.ExamsTable
 }
 
 func main() {
@@ -81,6 +82,12 @@ func main() {
 		}
 	}
 
+	fmt.Println("Student  per class", studentCountPerClass(db))
+	fmt.Println("Student  per year", studentCountPerYear(db))
+	fmt.Println("Lessons per year", lessonsPerYear(db, 10))
+	fmt.Println("Exams per class", examsPerClass(db, 10, "B"))
+	fmt.Println("Average grade for the student", averageGradeForStudents(db, "Pavels"))
+
 }
 
 func studentDayTimetable(db tables, name string, day time.Weekday) (res []database.Lesson) {
@@ -144,3 +151,80 @@ func studentWeekTimetable(db tables, name string) map[time.Weekday][]database.Le
 	}
 	return res
 }
+
+func studentCountPerClass(db tables) map[string]int {
+	m := make(map[string]int)
+	var st string
+	for _, i := range db.classes.Data {
+		for _, e := range db.groups.Data {
+			if i.ID == e.ClassID {
+				st = fmt.Sprint(i.Year) + i.Mod
+				m[st]++
+			}
+		}
+	}
+	return m
+}
+
+func studentCountPerYear(db tables) map[int]int {
+	res := make(map[int]int)
+	for _, i := range db.groups.Data {
+		for _, j := range db.classes.Data {
+			if i.ClassID == j.ID {
+				res[j.Year]++
+			}
+		}
+	}
+	return res
+}
+
+func lessonsPerYear(db tables, year int) (str []string) {
+	for _, tt := range db.timetable.Data {
+		for _, cl := range db.classes.Data {
+			for _, les := range db.lessons.Data {
+					for _, v := range en {
+						if v == ls.Name {
+							duplicate = true
+						}
+					}
+					if !duplicate {
+						en = append(en, ls.Name)
+					}
+				}
+			}
+		}
+	}
+
+func examsPerClass(db tables, year int, mod string) (en []string) {
+	for _, tt := range db.timetable.Data {
+		for _, cl := range db.classes.Data {
+			for _, les := range db.lessons.Data {
+				for _, ex := range db.exams.Data {
+					for _, v := range en {
+						if v == ls.Name {
+							duplicate = true
+						}
+					}
+					if !duplicate {
+						en = append(en, ls.Name)
+					}
+					}
+				}
+			}
+		}
+	}
+	return en
+}
+
+func averageGradeForStudents(db tables, name string) (average float64) {
+	var g []int
+	for _, exam := range db.exams.Data {
+		for _, student := range db.students.Data {
+				if exam.StudentID == st.ID && st.Name == name {
+					g = append(g, exam.Grade)
+				}
+		}
+		return average / float64(len(g))
+	}
+}
+
